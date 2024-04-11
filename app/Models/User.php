@@ -20,6 +20,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'last_name',
+        'role',
+        'image'
     ];
 
     /**
@@ -43,5 +46,9 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function posts(){
+        return $this->hasMany('App\Models\Post');
     }
 }
