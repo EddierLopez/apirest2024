@@ -76,4 +76,26 @@ class CategoryController extends Controller
         }
         return response()->json($response,$response['status']);
     }
+    public function destroy($id){
+        if(isset($id)){
+           $deleted=Category::where('id',$id)->delete();
+           if($deleted){
+                $response=array(
+                    'status'=>200,
+                    'message'=>'Categoria eliminada',                    
+                );
+           }else{
+            $response=array(
+                'status'=>400,
+                'message'=>'No se pudo eliminar el recurso, compruebe que exista'                
+            );
+           }
+        }else{
+            $response=array(
+                'status'=>406,
+                'message'=>'Falta el identificador del recurso a eliminar'                
+            );
+        }
+        return response()->json($response,$response['status']);
+    }
 }
