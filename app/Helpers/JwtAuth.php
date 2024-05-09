@@ -9,7 +9,7 @@ use App\Models\User;
 class JwtAuth{
     private $key;
     function __construct(){
-        $this->key="aswqdfewqeddafe23ewresa";
+        $this->key="aswqdfewqeddafe23ewresa"; //Llave privada
     }
     public function getToken($email,$password){
         $pass=hash('sha256',$password);
@@ -17,6 +17,7 @@ class JwtAuth{
         $user=User::where(['email'=>$email,'password'=>$password])->first();
         //var_dump($user);
         if(is_object($user)){
+            /**Payload Llave publica*/
             $token=array(
                 'iss'=>$user->id,
                 'email'=>$user->email,

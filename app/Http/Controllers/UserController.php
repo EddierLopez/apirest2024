@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Models\User;
 
 use App\Helpers\JwtAuth;
@@ -85,12 +86,56 @@ class UserController extends Controller
 
     }
     public function getIdentity(Request $request){
-
+        $jwt=new JwtAuth();
+        $token=$request->header('bearertoken');
+        if(isset($token)){
+            $response=$jwt->checkToken($token,true);
+        }else{
+            $response=array(
+                'status'=>404,
+                'message'=>'token (bearertoken) no encontrado',
+            );
+        }
+        return response()->json($response);
     }
     public function uploadImage(Request $request){
-
+        $isValid=\Validator::make($request->all(),['file0'=>'required|image|mimes:jpg,png,jpeg,svg']);
+        if(!$isValid->fails()){
+            $image=$request->file('file0');
+            $filename=\Str::uuid().".".$image->getClientOriginalExtension();
+            \Storage::disk('users')->put($filename,\File::get($image));
+            $response=array(
+                'status'=>201,
+                'message'=>'Imagen guardada',
+                'filename'=>$filename,
+            );
+        }else{
+            $response=array(
+                'status'=>406,
+                'message'=>'Error: no se encontro el archivo',
+                'errors'=>$isValid->errors(),
+            );
+        }
+        return response()->json($response,$response['status']);
     }
     public function getImage($filename){
-
+        if(isset($filename)){
+            $exist=\Storage::disk('users')->exists($filename);
+            if($exist){
+                $file=\Storage::disk('users')->get($filename);
+                return new Response($file,200);
+            }else{
+                $response=array(
+                    'status'=>404,
+                    'message'=>'Imagen no existe',
+                );
+            }
+        }else{
+            $response=array(
+                'status'=>406,
+                'message'=>'No se definió el nombre de la imagen',
+            );
+        }
+        return response()->json($response,$response['status']);
     }
 }
