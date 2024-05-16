@@ -11,12 +11,9 @@ class JwtAuth{
     function __construct(){
         $this->key="aswqdfewqeddafe23ewresa"; //Llave privada
     }
-    public function getToken($email,$password){
-        $pass=hash('sha256',$password);
-        //var_dump($pass);
-        $user=User::where(['email'=>$email,'password'=>$password])->first();
-        //var_dump($user);
-        if(is_object($user)){
+    public function getToken($email,$password){        
+        $user=User::where(['email'=>$email])->first();        
+        if(is_object($user) && password_verify($password,$user->password)){
             /**Payload Llave publica*/
             $token=array(
                 'iss'=>$user->id,

@@ -35,7 +35,7 @@ class UserController extends Controller
                 $user->name=$data['name'];
                 $user->last_name=$data['last_name'];
                 $user->email=$data['email'];
-                $user->password=hash('sha256',$data['password']);
+                $user->password=password_hash($data['password'],PASSWORD_DEFAULT);
                 $user->role=$data['role'];
                 $user->save();
                 $response=array(
@@ -72,7 +72,7 @@ class UserController extends Controller
         $rules=['email'=>'required','password'=>'required'];
         $isValid=\validator($data,$rules);
         if(!$isValid->fails()){
-            $jwt=new JwtAuth();
+            $jwt=new JwtAuth();            
             $response=$jwt->getToken($data['email'],$data['password']);
             return response()->json($response);
         }else{
