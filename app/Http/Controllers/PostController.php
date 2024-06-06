@@ -9,6 +9,17 @@ use App\Helpers\JwtAuth;
 class PostController extends Controller
 {
     //
+    public function index(){
+        $data=Post::all();
+        if($data){
+            $data->load("user","category");
+        }
+        $response=array(
+            'status'=>200,
+            'data'=>$data
+        );
+        return response()->json($response,200);
+    }
     public function show($id){
         $data=Post::find($id);
         if(is_object($data)){
