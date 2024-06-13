@@ -22,7 +22,7 @@ Route::prefix('v1')->group(
 
         Route::get('/post/{id}',[PostController::class,'show']);
         Route::get('/post',[PostController::class,'index']);
-        Route::post('/post/upload',[PostController::class,'uploadImage'])->middleware(ApiAuthMiddleware::class);
+        Route::post('/post/upload',[PostController::class,'upload'])->middleware(ApiAuthMiddleware::class);
         Route::get('/post/getimage/{filename}',[PostController::class,'getImage']);
 
         //RUTAS AUTOMATICAS Restful
